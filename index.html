@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting App</title>
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(function () {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Greeting App</h1>
+    <p>Enter your name:</p>
+    <input type="text" id="nameInput" placeholder="Your name">
+    <button onclick="greet()">Submit</button>
+    <p id="greetingMessage"></p>
+    <script>
+        function greet() {
+            const name = document.getElementById("nameInput").value;
+            document.getElementById("greetingMessage").textContent = name
+                ? `Hello, ${name}!`
+                : "Hello, Stranger!";
+        }
+    </script>
+</body>
+
+</html>
