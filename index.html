@@ -8,11 +8,28 @@
     <link rel="manifest" href="manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(function () {
+            navigator.serviceWorker.register('/sw.js').then(() => {
                 console.log('Service Worker Registered');
             });
         }
     </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #installButton {
+            display: none;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,13 +38,38 @@
     <input type="text" id="nameInput" placeholder="Your name">
     <button onclick="greet()">Submit</button>
     <p id="greetingMessage"></p>
+
+    <button id="installButton">Install App</button>
+
     <script>
         function greet() {
-            const name = document.getElementById("nameInput").value;
-            document.getElementById("greetingMessage").textContent = name
+            const name = document.getElementById('nameInput').value;
+            document.getElementById('greetingMessage').textContent = name
                 ? `Hello, ${name}!`
                 : "Hello, Stranger!";
         }
+
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            const installButton = document.getElementById('installButton');
+            installButton.style.display = 'block';
+
+            installButton.addEventListener('click', () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the installation');
+                    } else {
+                        console.log('User dismissed the installation');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        });
     </script>
 </body>
 
